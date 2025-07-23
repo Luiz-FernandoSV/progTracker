@@ -1,0 +1,71 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+/*Estilos do container de objetivos*/
+.rotulo-meus-objetivos {
+    margin: 15px 0px 0px 15px;
+}
+.container-objetivos {
+    margin: 15px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 30px;
+}
+.cartao-objetivo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+.cartao-objetivo:hover{
+    transform: scale(1.01);
+    
+}
+.cartao-objetivo .titulo-objetivo {
+    font-weight: bold;
+    color: #333;
+}
+.descricao-objetivo{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+.cartao-objetivo .descricao-objetivo,
+.conclusao-objetivo,
+.sub-objetivos {
+    font-weight: 200;
+    font-size: 14px;
+    color: gray;
+}
+.data-objetivo {
+    font-size: 12px;
+    color: gray;
+    font-weight: 100;
+}
+.barra-progresso {
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+.barra {
+    width: 60%;
+    height: 100%;
+    background-color: rgb(70, 175, 0);
+    transition: width 0.4s ease;
+}
