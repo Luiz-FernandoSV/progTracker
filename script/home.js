@@ -8,7 +8,7 @@ window.addEventListener('load', function () {
 
     // Array para guardar a porcentagem de conclusão de cada objetivo
     const arrayConclusao = []
-    
+
     // Loop para calcular a conclusão dos subobjetivos
     mockdata.objetivos.forEach(objetivo => {
         // Contador de subobjetivos concluídos
@@ -16,7 +16,7 @@ window.addEventListener('load', function () {
         // Itera sobre cada subobjetivo
         for (let i = 0; i < objetivo.subobjetivos.length; i++) {
             // Verifica o status do subobjetivo, se concluído o contador é incrementado
-            if (objetivo.subobjetivos[i].status == 'concluido'){
+            if (objetivo.subobjetivos[i].status == 'concluido') {
                 contadorConcluido++
             }
         }
@@ -45,4 +45,20 @@ window.addEventListener('load', function () {
         // Altera dinamicamente o preenchimento da barra de progresso
         barraProgresso.style.width = arrayConclusao[objetivo.id] + '%'
     });
+
+    // Seleciona os cards
+    let cardObjetivos = document.querySelectorAll('.cartao-objetivo')
+
+    // Para cada card adiciona um eventListener
+    cardObjetivos.forEach(card => {
+        card.addEventListener('click', () => {
+            // Ao clicar será feito um redirecionamento para a página de detalhes
+            // Leva o ID do objetivo como parâmetro na URL
+            this.window.location.href = `./detalhes.html?id=${card.getAttribute('data-index')}`
+        })
+    })
 })
+
+
+
+

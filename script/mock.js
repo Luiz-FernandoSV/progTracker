@@ -64,7 +64,7 @@ export const mockdata = {
       "id": 3,
       "titulo": "Aprender Banco de Dados",
       "descricao": "Estudar conceitos de banco de dados relacionais e NoSQL, focando em SQL e MongoDB.",
-      "status": "nao-concluido",
+      "status": "concluido",
       "subobjetivos": [
         {
           "id": 0,
