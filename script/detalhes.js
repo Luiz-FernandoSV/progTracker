@@ -36,21 +36,18 @@ window.addEventListener('load', function () {
     // Seleciona o campo de status
     let status = containerDetalhes.querySelector('.status');
     
-    // Formata o status original
-    let statusFormatado = ''
-    switch (objetivo.status) {
-        case 'concluido':
-            statusFormatado = 'Concluído'
-            break;
-        case 'nao-concluido':
-            statusFormatado = 'Não Concluído'
-            break;
-        default:
-            console.log('Status não reconhecido.')
-            break;
+    // Altera o status do objetivo
+    if(contadorConcluido == objetivo.subobjetivos.length){
+        status.textContent = 'Concluído'
+    }else{
+        status.textContent = 'Não Concluído'
     }
-    // Coloca o status formatado
-    status.textContent = statusFormatado;
+
+    // Altera os dados da seção de estatísticas
+    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos.length
+    document.querySelector('.card-conclusao p').textContent = contadorConcluido
+    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos.length - contadorConcluido
+
 
     const containerSubObj = document.querySelector('.container-subobjetivos');
 
@@ -72,13 +69,52 @@ window.addEventListener('load', function () {
 
         // Preenche o container dinamicamente
         containerSubObj.innerHTML += `
-        <div class="card-subobj">
-                <input type="checkbox">
+        <div class="card-subobj data-index="${subObj.id}">
+                <input type="checkbox" class="checkbox-status">
                 <div class="card-detalhes">
                     <h4 class="card-titulo">${subObj.titulo}</h4>
                     <p class="card-desc">${subObj.descricao}</p>
                     <p class="card-status">${statusSub}</p>
                 </div>
             </div>`
+
+        // Seleciona os cards
+        const cards = document.querySelectorAll('.card-subobj');
+        
+        // Para cada card faz a verificação do checkbox e status
+        cards.forEach(card =>{
+            let checkbox = card.querySelector('.checkbox-status');
+            let status = card.querySelector('.card-status').textContent;
+            // Troca o checkbox baseado no status
+            switch(status){
+                case 'Concluído':
+                    checkbox.checked = true;
+                    break;
+                case 'Não Concluído':
+                    checkbox.checked = false;
+                    break;
+                default:
+                    console.log("Erro");
+                    break;
+            }
+            // Adiciona um eventlistener de click
+            checkbox.addEventListener('click',function(){
+                // Seleciona o campo novamente
+                let campoStatus = card.querySelector('.card-status');
+                // Faz a troca do status
+                switch(checkbox.checked){
+                    case true:
+                        campoStatus.textContent = 'Concluído'
+                        break;
+                    case false:
+                        campoStatus.textContent = 'Não Concluído'
+                        break;
+                    default:
+                        console.log("Erro");
+                        break;
+                }
+            })
+            
+        })
     });
 })
