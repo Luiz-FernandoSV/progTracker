@@ -1,11 +1,9 @@
 // Importa os objetivos de exemplo
 import { mockdata } from './mock.js'
+import adicionarObjeto from './functions/addObj.js';
 
 // EventListener para carregar os objetivos assim que a tela carregar
 window.addEventListener('load', function () {
-    // Seleciona o container com os objetivos
-    let containerObjetivos = this.document.querySelector('.container-objetivos');
-
     // Array para guardar a porcentagem de conclusão de cada objetivo
     const arrayConclusao = []
 
@@ -28,22 +26,8 @@ window.addEventListener('load', function () {
 
     // Para cada objetivo cadastrado, cria um card no container
     mockdata.objetivos.forEach(objetivo => {
-        containerObjetivos.innerHTML += `
-        <div class="cartao-objetivo" data-index="${objetivo.id}">
-                <h4 class="titulo-objetivo">${objetivo.titulo}</h4>
-                <p class="descricao-objetivo">${objetivo.descricao}</p>
-                <p class="sub-objetivos">Sub-Objetivos Cadastrados: ${objetivo.subobjetivos.length}</p>
-                <p class="conclusao-objetivo">Progresso: </p>
-                <div class="barra-progresso">
-                    <div class="barra" data-index="${objetivo.id}"></div>
-                </div>
-                <p class="data-objetivo">Data de criação: 23/09/2025</p>
-            </div>`
-
-        // Seleciona a barra do card baseado no ID
-        const barraProgresso = containerObjetivos.querySelector(`.barra[data-index="${objetivo.id}"]`)
-        // Altera dinamicamente o preenchimento da barra de progresso
-        barraProgresso.style.width = arrayConclusao[objetivo.id] + '%'
+        // Função externa para criar os cards
+        adicionarObjeto(objetivo, arrayConclusao);
     });
 
     // Seleciona os cards
@@ -59,6 +43,64 @@ window.addEventListener('load', function () {
     })
 })
 
+// Seleciona os botões de abrir e fechar modal
+const btn_adicionar = document.querySelector('.btn-adicionar');
+const btn_fechar = document.querySelector('.fechar-modal');
+// Adiciona os eventos
+btn_adicionar.addEventListener('click', abrirModal);
+btn_fechar.addEventListener('click', fecharModal);
 
 
+// Funções pra abrir e fechar
+function abrirModal() {
+    document.querySelector('.container-modal').style.display = 'flex';
+}
+function fecharModal() {
+    document.querySelector('.container-modal').style.display = 'none';
+}
 
+// Seleciona o botão de enviar
+const btn_enviar = document.querySelector('#btn-enviar');
+// Adiciona um eventListener
+btn_enviar.addEventListener('click', function (event) {
+    // Ao enviar fecha o modal
+    fecharModal()
+    // Previne o recarregamento da página
+    event.preventDefault()
+    // Obtém os campos do form
+    let objTitulo = document.querySelector('input[id="titulo-obj"]');
+    let objDescricao = document.querySelector('textarea[id="descricao-obj"]');
+
+    // Verifica se os campos estão vazios; caso estejam, retorna ao form
+    if(objTitulo.value == '' || objDescricao.value == ''){
+        alert("Por favor, preencha todos os campos corretamente.");
+        return;
+    }
+
+    // ID do novo objetivo
+    let novoId = mockdata.objetivos.length + 1
+
+    // Cria um novo objeto
+    let novoObjetivo = {
+        id: novoId,
+        titulo: objTitulo.value,
+        descricao: objDescricao.value,
+        status: 'nao-concluido'
+    }
+    // Limpa os campos
+    objTitulo.value = '';
+    objDescricao.value = '';
+
+    // Chama a função para adicionar na tela
+    adicionarObjeto(novoObjetivo)
+})
+
+// Seleciona o modal
+const modal = document.querySelector('.container-modal');
+
+// Adiciona um eventListener; se o usuário clicar fora do modal, ele será fechado
+window.addEventListener('click',function(event){
+    if(event.target === modal){
+        modal.style.display = 'none'
+    }
+})

@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProgTracker</title>
     <link rel="stylesheet" href="./style/home.css">
 </head>
+
 <body>
     <div class="container-principal">
         <h1>Progress Tracker</h1>
-        <h2 class="rotulo-meus-objetivos">Meus Objetivos</h2>
+        <div class="container-labels">
+            <h2 class="rotulo-meus-objetivos">Meus Objetivos</h2>
+            <button class="btn-adicionar">Adicionar +</button>
+        </div>
         <div class="container-objetivos">
+        </div>
+    </div>
+    
+    <div class="container-modal" id="modal">
+        <div class="modal-form">
+            <form action="#">
+                <button class="fechar-modal">×</button>
+                <label for="titulo">Título:</label>
+                <input type="text" name="titulo" id="titulo-obj">
+
+                <label for="descricao">Descrição:</label>
+                <textarea name="descricao" id="descricao-obj" rows="4"></textarea>
+
+                <input type="submit" id="btn-enviar" value="Enviar">
+            </form>
         </div>
     </div>
     <script type="module" src="./script/home.js"></script>
 </body>
+
 </html>

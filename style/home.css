@@ -9,6 +9,22 @@ body {
 .rotulo-meus-objetivos {
     margin: 15px 0px 0px 15px;
 }
+.container-labels{
+    display: flex;
+    justify-content: space-between;
+}
+.btn-adicionar{
+    margin-right: 15px;
+    width: 150px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
 .container-objetivos {
     margin: 15px;
     display: grid;
@@ -64,8 +80,65 @@ body {
     border: 1px solid #ccc;
 }
 .barra {
-    width: 60%;
+    width: 0%;
     height: 100%;
     background-color: rgb(70, 175, 0);
     transition: width 0.4s ease;
+}
+/*Estilos do form modal*/
+.container-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.modal-form{
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    font-size: 20px;
+}
+.modal-form form{
+    position: relative; /* Adiciona isso */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+.modal-form form label{
+    font-size: 20px;
+    font-weight: bold;
+}
+.modal-form form input,textarea{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px;
+}
+.modal-form form input:active{
+    border-collapse: collapse;
+}
+.fechar-modal{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+}
+#btn-enviar{
+    background-color: black;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
 }
