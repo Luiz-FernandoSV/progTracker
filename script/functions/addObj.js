@@ -16,7 +16,7 @@ function adicionarObjeto(objetivo,conclusao) {
     // Seleciona a barra do card baseado no ID
     const barraProgresso = containerObjetivos.querySelector(`.barra[data-index="${objetivo.id}"]`)
     // Altera dinamicamente o preenchimento da barra de progresso
-    barraProgresso.style.width = conclusao[objetivo.id] + '%'
+    barraProgresso.style.width = conclusao + '%'
 }
 // Exporta a função
 export default adicionarObjeto;

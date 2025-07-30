@@ -1,4 +1,7 @@
-import { mockdata } from "./mock.js"
+import carregarDados from "./exemplos.js";
+
+// Variavel para guardar os dados
+const data = carregarDados();
 
 window.addEventListener('load', function () {
     // Busca por parâmetros na url
@@ -6,7 +9,7 @@ window.addEventListener('load', function () {
     // Busca pelo ID transferido
     let idObjetivo = params.get('id');
     // Procura um objetivo com aquele ID
-    let objetivo = mockdata.objetivos[idObjetivo];
+    let objetivo = data.objetivos[idObjetivo];
 
     // Seleciona o container dos detalhes
     const containerDetalhes = document.querySelector('.container-detalhes');
@@ -18,57 +21,55 @@ window.addEventListener('load', function () {
     let desc = containerDetalhes.querySelector('.desc');
     desc.textContent = objetivo.descricao;
 
-    // Conta o número de subobjetivos concluídos
+    // Variavel para porcentagem de conclusão
+    var porcentagem = 0;
+    // Contador de subobjetivos concluídos
     let contadorConcluido = 0;
-    objetivo.subobjetivos.forEach(subObj => {
-        if (subObj.status == 'concluido') {
-            contadorConcluido++
-        }
-    });
-    // Obtém a porcentagem de conclusão
-    let porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
 
-    // Seleciona a barra
-    const barraProgresso = document.querySelector('.barra');
-    // Preenche dinamicamente a barra
-    barraProgresso.style.width = porcentagem + '%'
+    // Verifica se há subobjetivos
+    // Só executa o script caso existam scripts cadastrados
+    if (objetivo.subobjetivos) {
+        // Conta o número de subobjetivos concluídos
+        objetivo.subobjetivos.forEach(subObj => {
+            if (subObj.status == 'concluido') {
+                contadorConcluido++
+            }
+        });
 
-    // Seleciona o campo de status
-    let status = containerDetalhes.querySelector('.status');
-    
-    // Altera o status do objetivo
-    if(contadorConcluido == objetivo.subobjetivos.length){
-        status.textContent = 'Concluído'
-    }else{
-        status.textContent = 'Não Concluído'
-    }
+        // Obtém a porcentagem de conclusão
+        porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
 
-    // Altera os dados da seção de estatísticas
-    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos.length
-    document.querySelector('.card-conclusao p').textContent = contadorConcluido
-    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos.length - contadorConcluido
+        // Seleciona o campo de status
+        let status = containerDetalhes.querySelector('.status');
 
-
-    const containerSubObj = document.querySelector('.container-subobjetivos');
-
-    // Cria um card para cada subobjetivo cadastrado
-    objetivo.subobjetivos.forEach(subObj => {
-        // Formata o status
-        let statusSub = ''
-        switch (subObj.status) {
-            case 'concluido':
-                statusSub = 'Concluído'
-                break;
-            case 'nao-concluido':
-                statusSub = 'Não Concluído'
-                break;
-            default:
-                console.log('Status não reconhecido.')
-                break;
+        // Altera o status do objetivo
+        if (contadorConcluido == objetivo.subobjetivos.length) {
+            status.textContent = 'Concluído'
+        } else {
+            status.textContent = 'Não Concluído'
         }
 
-        // Preenche o container dinamicamente
-        containerSubObj.innerHTML += `
+        // Seleciona o container dos subobjetivos
+        const containerSubObj = document.querySelector('.container-subobjetivos');
+
+        // Cria um card para cada subobjetivo cadastrado
+        objetivo.subobjetivos.forEach(subObj => {
+            // Formata o status
+            let statusSub = ''
+            switch (subObj.status) {
+                case 'concluido':
+                    statusSub = 'Concluído'
+                    break;
+                case 'nao-concluido':
+                    statusSub = 'Não Concluído'
+                    break;
+                default:
+                    console.log('Status não reconhecido.')
+                    break;
+            }
+
+            // Preenche o container dinamicamente
+            containerSubObj.innerHTML += `
         <div class="card-subobj data-index="${subObj.id}">
                 <input type="checkbox" class="checkbox-status">
                 <div class="card-detalhes">
@@ -78,43 +79,53 @@ window.addEventListener('load', function () {
                 </div>
             </div>`
 
-        // Seleciona os cards
-        const cards = document.querySelectorAll('.card-subobj');
-        
-        // Para cada card faz a verificação do checkbox e status
-        cards.forEach(card =>{
-            let checkbox = card.querySelector('.checkbox-status');
-            let status = card.querySelector('.card-status').textContent;
-            // Troca o checkbox baseado no status
-            switch(status){
-                case 'Concluído':
-                    checkbox.checked = true;
-                    break;
-                case 'Não Concluído':
-                    checkbox.checked = false;
-                    break;
-                default:
-                    console.log("Erro");
-                    break;
-            }
-            // Adiciona um eventlistener de click
-            checkbox.addEventListener('click',function(){
-                // Seleciona o campo novamente
-                let campoStatus = card.querySelector('.card-status');
-                // Faz a troca do status
-                switch(checkbox.checked){
-                    case true:
-                        campoStatus.textContent = 'Concluído'
+            // Seleciona os cards
+            const cards = document.querySelectorAll('.card-subobj');
+
+            // Para cada card faz a verificação do checkbox e status
+            cards.forEach(card => {
+                let checkbox = card.querySelector('.checkbox-status');
+                let status = card.querySelector('.card-status').textContent;
+                // Troca o checkbox baseado no status
+                switch (status) {
+                    case 'Concluído':
+                        checkbox.checked = true;
                         break;
-                    case false:
-                        campoStatus.textContent = 'Não Concluído'
+                    case 'Não Concluído':
+                        checkbox.checked = false;
                         break;
                     default:
                         console.log("Erro");
                         break;
                 }
+                // Adiciona um eventlistener de click
+                checkbox.addEventListener('click', function () {
+                    // Seleciona o campo novamente
+                    let campoStatus = card.querySelector('.card-status');
+                    // Faz a troca do status
+                    switch (checkbox.checked) {
+                        case true:
+                            campoStatus.textContent = 'Concluído'
+                            break;
+                        case false:
+                            campoStatus.textContent = 'Não Concluído'
+                            break;
+                        default:
+                            console.log("Erro");
+                            break;
+                    }
+                })
+
             })
-            
-        })
-    });
+        });
+        // Seleciona a barra
+        const barraProgresso = document.querySelector('.barra');
+        // Preenche dinamicamente a barra
+        barraProgresso.style.width = porcentagem + '%'
+    }
+    // Altera os dados da seção de estatísticas
+    // Verifica se contadorConcluído e subojetivos existem, caso contrário serão 0
+    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
+    document.querySelector('.card-conclusao p').textContent = typeof contadorConcluido !== 'undefined' ? contadorConcluido : '0';
+    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && typeof contadorConcluido !== 'undefined' ? objetivo.subobjetivos.length - contadorConcluido : '0';
 })
