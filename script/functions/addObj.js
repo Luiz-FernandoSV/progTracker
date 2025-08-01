@@ -1,4 +1,4 @@
-function adicionarObjeto(objetivo,conclusao) {
+function adicionarObjeto(objetivo, conclusao) {
     // Seleciona o container com os objetivos
     let containerObjetivos = document.querySelector('.container-objetivos');
     // Adiciona um novo cartão ao container
@@ -17,6 +17,18 @@ function adicionarObjeto(objetivo,conclusao) {
     const barraProgresso = containerObjetivos.querySelector(`.barra[data-index="${objetivo.id}"]`)
     // Altera dinamicamente o preenchimento da barra de progresso
     barraProgresso.style.width = conclusao + '%'
+
+    // Seleciona os cards
+    let cardObjetivos = document.querySelectorAll('.cartao-objetivo')
+
+    // Para cada card adiciona um eventListener
+    cardObjetivos.forEach(card => {
+        card.addEventListener('click', () => {
+            // Ao clicar será feito um redirecionamento para a página de detalhes
+            // Leva o ID do objetivo como parâmetro na URL
+            window.location.href = `./detalhes.html?id=${card.getAttribute('data-index')}`
+        })
+    })
 }
 // Exporta a função
 export default adicionarObjeto;

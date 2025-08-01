@@ -40,18 +40,6 @@ window.addEventListener('load', function () {
         // Função externa para criar os cards
         adicionarObjeto(objetivo, arrayConclusao[objetivo.id]);
     });
-
-    // Seleciona os cards
-    let cardObjetivos = document.querySelectorAll('.cartao-objetivo')
-
-    // Para cada card adiciona um eventListener
-    cardObjetivos.forEach(card => {
-        card.addEventListener('click', () => {
-            // Ao clicar será feito um redirecionamento para a página de detalhes
-            // Leva o ID do objetivo como parâmetro na URL
-            this.window.location.href = `./detalhes.html?id=${card.getAttribute('data-index')}`
-        })
-    })
 })
 
 // Seleciona os botões de abrir e fechar modal
@@ -88,15 +76,15 @@ btn_enviar.addEventListener('click', function (event) {
         return;
     }
 
-    // ID do novo objetivo, obtém o último índice no array, e incrementa ele
-    let novoId = (data.objetivos.length - 1) + 1
-    console.log(novoId)
+    // ID do novo objetivo, obtém o tamanho do array
+    let novoID = data.objetivos.length
 
     // Cria um novo objeto
     let novoObjetivo = {
-        id: novoId,
+        id: novoID,
         titulo: objTitulo.value,
         descricao: objDescricao.value,
+        subobjetivos: [],
         status: 'nao-concluido'
     }
     // Limpa os campos
@@ -109,7 +97,6 @@ btn_enviar.addEventListener('click', function (event) {
     arrayAtual.objetivos.push(novoObjetivo);
     // Atualiza o localstorage
     localStorage.setItem('dados', JSON.stringify(arrayAtual))
-
 
     // Chama a função para adicionar na tela
     adicionarObjeto(novoObjetivo,0);

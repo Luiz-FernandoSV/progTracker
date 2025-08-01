@@ -34,10 +34,29 @@
                 <p>0</p>
             </div>
         </div>
-        <h1>Sub-Objetivos</h1>
+        <div class="container-label">
+            <h1>Sub-Objetivos</h1>
+            <button class="btn-adicionar-subobj">Adicionar +</button>
+        </div>
         <div class="container-subobjetivos">
         </div>
     </div>
+
+    <div class="container-modal" id="modal">
+        <div class="modal-form">
+            <form action="#">
+                <button class="fechar-modal">×</button>
+                <label for="titulo">Título:</label>
+                <input type="text" name="titulo" id="titulo-obj">
+
+                <label for="descricao">Descrição:</label>
+                <textarea name="descricao" id="descricao-obj" rows="4"></textarea>
+
+                <input type="submit" id="btn-enviar" value="Enviar">
+            </form>
+        </div>
+    </div>
+
     <script type="module" src="./script/detalhes.js"></script>
 </body>
 
