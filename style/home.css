@@ -45,6 +45,16 @@ body {
     transform: scale(1.01);
     
 }
+.top-bar{
+    display: flex;
+    justify-content: space-between;
+}
+.div-acoes{
+    font-size: 20px;
+}
+.div-acoes .fa-trash{
+    color: red;
+}
 .cartao-objetivo .titulo-objetivo {
     font-weight: bold;
     color: #333;
