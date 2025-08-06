@@ -36,9 +36,11 @@ window.addEventListener('load', function () {
 // Seleciona os botões de abrir e fechar modal
 const btn_adicionar = document.querySelector('.btn-adicionar');
 const btn_fechar = document.querySelector('.fechar-modal');
+const btn_fechar_exc = document.querySelector('.fechar-modal-exc')
 // Adiciona os eventos
 btn_adicionar.addEventListener('click', abrirModal);
 btn_fechar.addEventListener('click', fecharModal);
+btn_fechar_exc.addEventListener('click',fecharModal)
 
 
 // Funções pra abrir e fechar
@@ -47,10 +49,12 @@ function abrirModal() {
 }
 function fecharModal() {
     document.querySelector('.container-modal').style.display = 'none';
+    document.querySelector('#modal-exclusao').style.display = 'none';
 }
 
 // Seleciona o modal
 const modal = document.querySelector('.container-modal');
+const modalExclusao = document.querySelector('#modal-exclusao');
 
 // Seleciona o botão de enviar
 const btn_enviar = document.querySelector('#btn-enviar');
@@ -75,8 +79,10 @@ btn_enviar.addEventListener('click', function (event) {
             return;
         }
 
+        // Busca os dados atuais do storage
+        let arrayAtual = JSON.parse(localStorage.getItem('dados')) || [];
         // ID do novo objetivo, obtém o tamanho do array
-        let novoID = data.objetivos.length
+        let novoID = arrayAtual.objetivos.length
 
         // Cria um novo objeto
         let novoObjetivo = {
@@ -90,8 +96,6 @@ btn_enviar.addEventListener('click', function (event) {
         objTitulo.value = '';
         objDescricao.value = '';
 
-        // Busca os dados atuais do storage
-        let arrayAtual = JSON.parse(localStorage.getItem('dados')) || [];
         // Atualiza o array
         arrayAtual.objetivos.push(novoObjetivo);
         // Atualiza o localstorage
@@ -139,7 +143,8 @@ btn_enviar.addEventListener('click', function (event) {
 
 // Adiciona um eventListener; se o usuário clicar fora do modal, ele será fechado
 window.addEventListener('click', function (event) {
-    if (event.target === modal) {
-        modal.style.display = 'none'
+    if (event.target === modal || event.target === modalExclusao) {
+        modal.style.display = 'none';
+        modalExclusao.style.display = 'none';
     }
 })

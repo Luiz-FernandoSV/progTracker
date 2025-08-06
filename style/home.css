@@ -115,7 +115,7 @@ body {
     font-size: 20px;
 }
 .modal-form form{
-    position: relative; /* Adiciona isso */
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -151,4 +151,48 @@ body {
     color: white;
     font-size: 20px;
     font-weight: bold;
+}
+/*Estilos do modal de confirmação de exclusão*/
+#modal-exclusao .modal{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 15px;
+    font-size: 20px;
+    gap: 20px;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+.fechar-modal-exc{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+}
+.container-botoes{
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
+.btn-confirmar{
+    background-color: rgb(197, 76, 76);
+    border: none;
+    color: white;
+    width: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+    transition: 0.2s ease-in-out;
+}
+.btn-confirmar:hover{
+    background-color: rgb(221, 35, 35);
+    transform: scale(0.99);
 }

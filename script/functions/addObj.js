@@ -34,7 +34,9 @@ function adicionarObjeto(objetivo, conclusao) {
             // Leva o ID do objetivo como parâmetro na URL
             window.location.href = `./detalhes.html?id=${card.getAttribute('data-index')}`
         })
+        // Seleciona o icone de edição do card
         let iconeEditar = card.querySelector('.fa-pen-to-square');
+        // EventListener de clique
         iconeEditar.addEventListener('click', function (event) {
             event.stopPropagation(); // Evita o redirecionamento
             // Seleciona o modal e o form
@@ -52,6 +54,35 @@ function adicionarObjeto(objetivo, conclusao) {
             form.dataset.index = card.dataset['index'];
             // Exibe o form modal
             modal.style.display = 'flex';
+        })
+        // Seleciona o botão de apagar
+        let iconeDeletar = card.querySelector('.fa-trash');
+        iconeDeletar.addEventListener('click', function (event) {
+            event.stopPropagation(); // Evita o redirecionamento
+            // Obtém o id do objetivo
+            let idObjetivo = card.dataset.index
+            // Seleciona o modal de confirmação
+            let modalExclusao = document.querySelector('#modal-exclusao');
+            // Deixa ele visível na tela
+            modalExclusao.style.display = 'flex'
+            // Seleciona o card onde o botão foi clicado
+            let cardSelecionado = containerObjetivos.querySelector(`.cartao-objetivo[data-index="${card.dataset['index']}"]`);
+            // Seleciona o botão de confirmação
+            let btn_confirmar = document.querySelector('.btn-confirmar');
+            // Adiciona um eventListener, só apaga o card caso seja confirmado
+            btn_confirmar.addEventListener('click', function () {
+                // Remove o card da tela
+                cardSelecionado.remove()
+                // Esconde o modal novamente
+                modalExclusao.style.display = 'none';
+                // Obtém o array atual e atualiza ele
+                let arrayAtual = JSON.parse(localStorage.getItem('dados'));
+                // Remove o objetivo do array
+                arrayAtual.objetivos = arrayAtual.objetivos.filter(obj => obj.id != idObjetivo);
+                // Atualiza o localStorage
+                localStorage.setItem('dados', JSON.stringify(arrayAtual));
+
+            })
         })
     })
 }

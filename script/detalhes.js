@@ -9,7 +9,7 @@ const params = new URLSearchParams(window.location.search);
 // Busca pelo ID transferido
 const idObjetivo = params.get('id');
 // Procura um objetivo com aquele ID
-const objetivo = data.objetivos[idObjetivo];
+const objetivo = data.objetivos.find(obj => obj.id == idObjetivo);
 
 window.addEventListener('load', function () {
 
