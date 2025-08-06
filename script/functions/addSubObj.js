@@ -17,7 +17,7 @@ function adicionarSubObjetivo(subobj) {
 
     // Preenche o container dinamicamente
     containerSubObj.innerHTML += `
-     <div class="card-subobj data-index="${subobj.id}">
+     <div class="card-subobj" data-index="${subobj.id}">
              <input type="checkbox" class="checkbox-status">
              <div class="card-detalhes">
                  <h4 class="card-titulo">${subobj.titulo}</h4>

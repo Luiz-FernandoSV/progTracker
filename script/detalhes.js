@@ -1,5 +1,6 @@
 import carregarDados from "./exemplos.js";
 import adicionarSubObjetivo from "./functions/addSubObj.js";
+import calcularConclusao from "./functions/calcConclusao.js";
 
 // Variavel para guardar os dados
 const data = carregarDados();
@@ -15,6 +16,9 @@ window.addEventListener('load', function () {
     // Seleciona o container dos detalhes
     const containerDetalhes = document.querySelector('.container-detalhes');
 
+    // Seleciona a barra
+    const barraProgresso = document.querySelector('.barra');
+
     // Altera as informações dinamicamente
     let titulo = containerDetalhes.querySelector('.titulo');
     titulo.textContent = objetivo.titulo;
@@ -22,29 +26,16 @@ window.addEventListener('load', function () {
     let desc = containerDetalhes.querySelector('.desc');
     desc.textContent = objetivo.descricao;
 
-    // Variavel para porcentagem de conclusão
-    var porcentagem = 0;
-    // Contador de subobjetivos concluídos
-    let contadorConcluido = 0;
-
+    // Função que calcula e retorna informações sobre a conclusão do objetivo
+    let conclusao = calcularConclusao(objetivo)
     // Verifica se há subobjetivos
     // Só executa o script caso existam subobjetivos cadastrados
     if (objetivo.subobjetivos) {
-        // Conta o número de subobjetivos concluídos
-        objetivo.subobjetivos.forEach(subObj => {
-            if (subObj.status == 'concluido') {
-                contadorConcluido++
-            }
-        });
-
-        // Obtém a porcentagem de conclusão
-        porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
-
         // Seleciona o campo de status
         let status = containerDetalhes.querySelector('.status');
 
         // Altera o status do objetivo
-        if (contadorConcluido == objetivo.subobjetivos.length) {
+        if (conclusao.porcentagem == 100) {
             status.textContent = 'Concluído'
         } else {
             status.textContent = 'Não Concluído'
@@ -60,6 +51,8 @@ window.addEventListener('load', function () {
 
             // Para cada card faz a verificação do checkbox e status
             cards.forEach(card => {
+                // Obtém o índice do card
+                let cardIndex = card.dataset.index
                 let checkbox = card.querySelector('.checkbox-status');
                 let status = card.querySelector('.card-status').textContent;
                 // Troca o checkbox baseado no status
@@ -78,32 +71,54 @@ window.addEventListener('load', function () {
                 checkbox.addEventListener('click', function () {
                     // Seleciona o campo novamente
                     let campoStatus = card.querySelector('.card-status');
-                    // Faz a troca do status
+                    // Faz a troca do status e atualiza os subobjetivos
                     switch (checkbox.checked) {
                         case true:
+                            objetivo.subobjetivos[cardIndex].status = 'concluido';
                             campoStatus.textContent = 'Concluído'
                             break;
                         case false:
+                            objetivo.subobjetivos[cardIndex].status = 'nao-concluido';
                             campoStatus.textContent = 'Não Concluído'
                             break;
                         default:
                             console.log("Erro");
                             break;
                     }
+                    // Atualiza o storage
+                    localStorage.setItem('dados', JSON.stringify(data))
+
+                    // Função para calcular e retornar informações sobre a conclusão
+                    let conclusao = calcularConclusao(objetivo)
+
+                    // Seleciona o campo de status
+                    let status = containerDetalhes.querySelector('.status');
+
+                    // Altera o status do objetivo
+                    if (conclusao.porcentagem == 100) {
+                        status.textContent = 'Concluído'
+                    } else {
+                        status.textContent = 'Não Concluído'
+                    }
+                    // Preenche dinamicamente a barra
+                    barraProgresso.style.width = conclusao.porcentagem + '%'
+
+                    // Altera os dados da seção de estatísticas
+                    // Verifica se a quantidade de subobjetivos concluídos são diferentes de 0, se não forem o valor é 0
+                    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
+                    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
+                    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
                 })
 
             })
         });
-        // Seleciona a barra
-        const barraProgresso = document.querySelector('.barra');
         // Preenche dinamicamente a barra
-        barraProgresso.style.width = porcentagem + '%'
+        barraProgresso.style.width = conclusao.porcentagem + '%'
     }
     // Altera os dados da seção de estatísticas
-    // Verifica se contadorConcluído e subojetivos existem, caso contrário serão 0
     document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-    document.querySelector('.card-conclusao p').textContent = typeof contadorConcluido !== 'undefined' ? contadorConcluido : '0';
-    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && typeof contadorConcluido !== 'undefined' ? objetivo.subobjetivos.length - contadorConcluido : '0';
+    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
+    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
 })
 
 // Funções pra abrir e fechar
@@ -147,7 +162,7 @@ btnEnviar.addEventListener('click', function (event) {
         descricao: descricaoSub,
         status: 'nao-concluido'
     }
-    
+
     // Adiciona o novo subobjetivo
     objetivo.subobjetivos.push(novoSubObj)
     // Atualiza o localstorage
@@ -155,12 +170,12 @@ btnEnviar.addEventListener('click', function (event) {
 
     // Altera os dados da seção de estatísticas
     document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-    document.querySelector('.card-conclusao p').textContent = typeof contadorConcluido !== 'undefined' ? contadorConcluido : '0';
-    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && typeof contadorConcluido !== 'undefined' ? objetivo.subobjetivos.length - contadorConcluido : '0';
+    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
+    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
 
     // Adiciona o card na tela
     adicionarSubObjetivo(novoSubObj)
-    
+
 })
 
 // Seleciona o modal

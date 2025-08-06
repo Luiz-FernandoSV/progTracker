@@ -1,5 +1,6 @@
 // Importa os objetivos de exemplo
 import adicionarObjeto from './functions/addObj.js';
+import calcularConclusao from './functions/calcConclusao.js';
 import carregarDados from './exemplos.js';
 
 // Variavel para guardar os dados
@@ -12,26 +13,16 @@ window.addEventListener('load', function () {
 
     // Loop para calcular a conclusão dos subobjetivos
     data.objetivos.forEach(objetivo => {
-        // Contador de subobjetivos concluídos
-        let contadorConcluido = 0;
-
         // Verifica se há subobjetivos
         if (objetivo.subobjetivos == null) {
             // Caso não haja marca o progresso como zerado
             arrayConclusao.push(0)
         }
         else {
-            // Itera sobre cada subobjetivo
-            for (let i = 0; i < objetivo.subobjetivos.length; i++) {
-                // Verifica o status do subobjetivo, se concluído o contador é incrementado
-                if (objetivo.subobjetivos[i].status == 'concluido') {
-                    contadorConcluido++
-                }
-            }
-            // Obtém a porcentagem de conclusão
-            let porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
+            // Função que calcula e retorna informações sobre a conclusão do objetivo
+            let conclusao = calcularConclusao(objetivo)
             // Salva ela no array
-            arrayConclusao.push(porcentagem)
+            arrayConclusao.push(conclusao.porcentagem)
         }
     });
 
