@@ -31,95 +31,34 @@ window.addEventListener('load', function () {
     // Verifica se há subobjetivos
     // Só executa o script caso existam subobjetivos cadastrados
     if (objetivo.subobjetivos) {
-        // Seleciona o campo de status
-        let status = containerDetalhes.querySelector('.status');
-
-        // Altera o status do objetivo
-        if (conclusao.porcentagem == 100) {
-            status.textContent = 'Concluído'
-        } else {
-            status.textContent = 'Não Concluído'
-        }
-
         // Cria um card para cada subobjetivo cadastrado
         objetivo.subobjetivos.forEach(subObj => {
 
-            adicionarSubObjetivo(subObj)
+            adicionarSubObjetivo(objetivo, subObj)
+            // Função para calcular e retornar informações sobre a conclusão
+            let conclusao = calcularConclusao(objetivo)
 
-            // Seleciona os cards
-            const cards = document.querySelectorAll('.card-subobj');
+            // Seleciona o campo de status
+            let status = containerDetalhes.querySelector('.status');
 
-            // Para cada card faz a verificação do checkbox e status
-            cards.forEach(card => {
-                // Obtém o índice do card
-                let cardIndex = card.dataset.index
-                let checkbox = card.querySelector('.checkbox-status');
-                let status = card.querySelector('.card-status').textContent;
-                // Troca o checkbox baseado no status
-                switch (status) {
-                    case 'Concluído':
-                        checkbox.checked = true;
-                        break;
-                    case 'Não Concluído':
-                        checkbox.checked = false;
-                        break;
-                    default:
-                        console.log("Erro");
-                        break;
-                }
-                // Adiciona um eventlistener de click
-                checkbox.addEventListener('click', function () {
-                    // Seleciona o campo novamente
-                    let campoStatus = card.querySelector('.card-status');
-                    // Faz a troca do status e atualiza os subobjetivos
-                    switch (checkbox.checked) {
-                        case true:
-                            objetivo.subobjetivos[cardIndex].status = 'concluido';
-                            campoStatus.textContent = 'Concluído'
-                            break;
-                        case false:
-                            objetivo.subobjetivos[cardIndex].status = 'nao-concluido';
-                            campoStatus.textContent = 'Não Concluído'
-                            break;
-                        default:
-                            console.log("Erro");
-                            break;
-                    }
-                    // Atualiza o storage
-                    localStorage.setItem('dados', JSON.stringify(data))
+            // Altera o status do objetivo
+            if (conclusao.porcentagem == 100) {
+                status.textContent = 'Concluído'
+            } else {
+                status.textContent = 'Não Concluído'
+            }
 
-                    // Função para calcular e retornar informações sobre a conclusão
-                    let conclusao = calcularConclusao(objetivo)
+            // Altera os dados da seção de estatísticas
+            // Verifica se a quantidade de subobjetivos concluídos são diferentes de 0, se não forem o valor é 0
+            document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
+            document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
+            document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
+        })
 
-                    // Seleciona o campo de status
-                    let status = containerDetalhes.querySelector('.status');
-
-                    // Altera o status do objetivo
-                    if (conclusao.porcentagem == 100) {
-                        status.textContent = 'Concluído'
-                    } else {
-                        status.textContent = 'Não Concluído'
-                    }
-                    // Preenche dinamicamente a barra
-                    barraProgresso.style.width = conclusao.porcentagem + '%'
-
-                    // Altera os dados da seção de estatísticas
-                    // Verifica se a quantidade de subobjetivos concluídos são diferentes de 0, se não forem o valor é 0
-                    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-                    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
-                    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
-                })
-
-            })
-        });
-        // Preenche dinamicamente a barra
-        barraProgresso.style.width = conclusao.porcentagem + '%'
     }
-    // Altera os dados da seção de estatísticas
-    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
-    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
-})
+    // Preenche dinamicamente a barra
+    barraProgresso.style.width = conclusao.porcentagem + '%';
+});
 
 // Funções pra abrir e fechar
 function abrirModal() {
@@ -133,11 +72,18 @@ function fecharModal() {
 const btnAdicionar = document.querySelector('.btn-adicionar-subobj');
 const btnFechar = document.querySelector('.fechar-modal');
 
+// Seleciona o modal
+const modal = document.querySelector('.container-modal');
+const modalExclusao = document.querySelector('#modal-exclusao');
+
 // Abre e fecha o modal
 btnAdicionar.addEventListener('click', abrirModal);
 btnFechar.addEventListener('click', function (event) {
     event.preventDefault();
     fecharModal();
+    // limpa o modal caso seja fechado
+    modal.querySelector('input[id="titulo-subobj"]').value = '';
+    modal.querySelector('textarea[id="descricao-subobj"]').value = '';
 });
 
 const btnEnviar = document.querySelector('#btn-enviar');
@@ -146,44 +92,91 @@ btnEnviar.addEventListener('click', function (event) {
     event.preventDefault();
     // Fecha o modal
     fecharModal()
+    // Verifica o modo do form, se é uma adição ou edição
+    // Variavel de controle
+    var modoForm = document.querySelector('form').dataset.mode;
 
-    // Seleciona os valores dos campos do form
-    let tituloSub = document.querySelector('input[name="titulo"]').value
-    let descricaoSub = document.querySelector('textarea[name="descricao"]').value
+    console.log(document.querySelector('input[id="titulo-subobj"]'))
+    if (modoForm == 'adicionar') {
+        // Seleciona os valores dos campos do form
+        let tituloSub = document.querySelector('input[id="titulo-subobj"]');
+        let descricaoSub = document.querySelector('textarea[id="descricao-subobj"]');
 
-    // Cria um novo ID a partir do último índice de subobjetivos
-    // Caso não exista nenhum será 0
-    let novoID = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : 0;
+        // Verifica se os campos estão vazios; caso estejam, retorna ao form
+        if (tituloSub.value == '' || descricaoSub.value == '') {
+            alert("Por favor, preencha todos os campos corretamente.");
+            return;
+        }
+        // Cria um novo ID a partir do último índice de subobjetivos
+        // Caso não exista nenhum será 0
+        let novoID = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : 0;
 
-    // Cria um novo objeto
-    let novoSubObj = {
-        id: novoID,
-        titulo: tituloSub,
-        descricao: descricaoSub,
-        status: 'nao-concluido'
+        // Cria um novo objeto
+        let novoSubObj = {
+            id: novoID,
+            titulo: tituloSub.value,
+            descricao: descricaoSub.value,
+            status: 'nao-concluido'
+        }
+
+        // Adiciona o novo subobjetivo
+        objetivo.subobjetivos.push(novoSubObj)
+        // Atualiza o localstorage
+        localStorage.setItem('dados', JSON.stringify(data));
+
+        // Calcula novamente as estatísticas
+        const concluidos = objetivo.subobjetivos.filter(sub => sub.status === 'concluido').length
+
+        // Altera os dados da seção de estatísticas
+        document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
+        document.querySelector('.card-conclusao p').textContent = concluidos
+        document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length - concluidos : '0';
+        // Limpa os campos
+        tituloSub.value = '';
+        descricaoSub.value = '';
+
+        // Adiciona o card na tela
+        adicionarSubObjetivo(objetivo, novoSubObj);
+    } else if (modoForm == 'editar') {
+        let cardIndex = document.querySelector('form').dataset.index;
+        console.log(cardIndex)
+        // Seleciona o card com aquele índice
+        let cardEditado = document.querySelector(`.card-subobj[data-index="${cardIndex}"]`);
+        // Obtém os novos valores
+        let novoTitulo = modal.querySelector('input[id="titulo-subobj"]').value;
+        let novaDescricao = modal.querySelector('textarea[id="descricao-subobj"]').value;
+
+        // Altera o HTML
+        cardEditado.querySelector('.card-titulo').textContent = novoTitulo;
+        cardEditado.querySelector('.card-desc').textContent = novaDescricao;
+
+        // Obtém o array atual
+        let arrayAtual = JSON.parse(localStorage.getItem('dados')) || [];
+        // Obtém o objeto em questão
+        let subObjetivoAtual = arrayAtual.objetivos[idObjetivo].subobjetivos[cardIndex];
+        // Atualiza os valores
+        subObjetivoAtual.titulo = novoTitulo
+        subObjetivoAtual.descricao = novaDescricao
+
+        // Atualiza o localstorage
+        localStorage.setItem('dados', JSON.stringify(arrayAtual))
+        // limpa os campos do modal
+        modal.querySelector('input[id="titulo-subobj"]').value = '';
+        modal.querySelector('textarea[id="descricao-subobj"]').value = '';
+        // Reseta o modo do form e o índice
+        document.querySelector('form').dataset.mode = 'adicionar';
+        document.querySelector('form').dataset.index = '';
     }
-
-    // Adiciona o novo subobjetivo
-    objetivo.subobjetivos.push(novoSubObj)
-    // Atualiza o localstorage
-    localStorage.setItem('dados',JSON.stringify(data));
-
-    // Altera os dados da seção de estatísticas
-    document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-    document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
-    document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
-
-    // Adiciona o card na tela
-    adicionarSubObjetivo(novoSubObj)
-
 })
-
-// Seleciona o modal
-const modal = document.querySelector('.container-modal');
 
 // Adiciona um eventListener; se o usuário clicar fora do modal, ele será fechado
 window.addEventListener('click', function (event) {
-    if (event.target === modal) {
-        modal.style.display = 'none'
+    if (event.target === modal || event.target === modalExclusao
+    ) {
+        modal.style.display = 'none';
+        modalExclusao.style.display = 'none';
+        // limpa o modal caso seja fechado
+        modal.querySelector('input[id="titulo-subobj"]').value = '';
+        modal.querySelector('textarea[id="descricao-subobj"]').value = '';
     }
 })

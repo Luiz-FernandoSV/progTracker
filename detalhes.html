@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes</title>
     <link rel="stylesheet" href="./style/detalhes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -44,19 +45,28 @@
 
     <div class="container-modal" id="modal">
         <div class="modal-form">
-            <form action="#">
+            <form action="#" data-mode="adicionar">
                 <button class="fechar-modal">×</button>
                 <label for="titulo">Título:</label>
-                <input type="text" name="titulo" id="titulo-obj">
+                <input type="text" name="titulo" id="titulo-subobj">
 
                 <label for="descricao">Descrição:</label>
-                <textarea name="descricao" id="descricao-obj" rows="4"></textarea>
+                <textarea name="descricao" id="descricao-subobj" rows="4"></textarea>
 
                 <input type="submit" id="btn-enviar" value="Enviar">
             </form>
         </div>
     </div>
-
+    <!--Modal de confirmação de exclusão-->
+    <div class="container-modal" id="modal-exclusao">
+        <div class="modal">
+            <button class="fechar-modal-exc">×</button>
+            <p>Tem certeza que quer excluir este objetivo?</p>
+            <div class="container-botoes">
+                <button class="btn-confirmar">Excluir</button>
+            </div>
+        </div>
+    </div>
     <script type="module" src="./script/detalhes.js"></script>
 </body>
 

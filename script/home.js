@@ -109,14 +109,14 @@ btn_enviar.addEventListener('click', function (event) {
         let form = document.querySelector('form');
         let cardIndex = form.dataset.index
         // Seleciona o card com aquele índice
-        let card = document.querySelector(`.cartao-objetivo[data-index="${cardIndex}"]`);
+        let cardEditado = document.querySelector(`.cartao-objetivo[data-index="${cardIndex}"]`);
         // Obtém os novos valores
         let novoTitulo = modal.querySelector('input[id="titulo-obj"]').value;
         let novaDescricao = modal.querySelector('textarea[id="descricao-obj"]').value;
 
         // Altera o HTML
-        card.querySelector('.titulo-objetivo').textContent = novoTitulo;
-        card.querySelector('.descricao-objetivo').textContent = novaDescricao;
+        cardEditado.querySelector('.titulo-objetivo').textContent = novoTitulo;
+        cardEditado.querySelector('.descricao-objetivo').textContent = novaDescricao;
 
         // Obtém o array atual
         let arrayAtual = JSON.parse(localStorage.getItem('dados')) || [];

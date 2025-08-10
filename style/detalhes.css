@@ -96,10 +96,29 @@ body{
     border: 1px solid rgb(199, 199, 199);
     border-radius: 12px;
 }
+.container-conteudo{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
 .card-detalhes{
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+.div-acoes{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+.div-acoes .fa-trash{
+    color: red;
+    cursor: pointer;
+}
+.div-acoes .fa-pen-to-square{
+    cursor: pointer;
 }
 
 /*Estilos do form modal*/
@@ -158,4 +177,48 @@ body{
     color: white;
     font-size: 20px;
     font-weight: bold;
+}
+/*Estilos do modal de confirmação de exclusão*/
+#modal-exclusao .modal{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 15px;
+    font-size: 20px;
+    gap: 20px;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+.fechar-modal-exc{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+}
+.container-botoes{
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
+.btn-confirmar{
+    background-color: rgb(197, 76, 76);
+    border: none;
+    color: white;
+    width: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+    transition: 0.2s ease-in-out;
+}
+.btn-confirmar:hover{
+    background-color: rgb(221, 35, 35);
+    transform: scale(0.99);
 }
