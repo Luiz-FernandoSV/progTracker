@@ -84,15 +84,25 @@ function carregarDados() {
     ]
   };
 
-  // Verifica se ja há os objetivos de exemplo no localstorage, se houver retorna o que estiver armazenado
-  // Caso contrário retorna os objetivos de exemplo
-  if (localStorage.getItem('dados')) {
-    return JSON.parse(localStorage.getItem('dados'));
-  } else {
-    localStorage.setItem('dados', JSON.stringify(dadosExemplo))
-    return dadosExemplo;
-  }
+  // Função para lidar com a inicialização do localstorage
+  // Só traz os dados de exemplo na primeira inicialização
+  function inicializar() {
+    // Flag para controle do localstorage
+    let jaInicializou = localStorage.getItem('flagInicializacao');
 
+    // Caso seja a primeira inicialização
+    if(!jaInicializou){
+      // Guarda os dados de exemplo no localstorage
+      localStorage.setItem('dados',JSON.stringify(dadosExemplo));
+      // Marca que já iniciou uma vez
+      localStorage.setItem('flagInicializacao','true');
+    }
+    // Retorna os dados
+    return JSON.parse(localStorage.getItem('dados'));
+  }
+  
+  // Retorna o conteúdo da função
+  return inicializar();
 }
 
 export default carregarDados;

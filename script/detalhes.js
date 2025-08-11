@@ -1,6 +1,6 @@
 import carregarDados from "./exemplos.js";
 import adicionarSubObjetivo from "./functions/addSubObj.js";
-import calcularConclusao from "./functions/calcConclusao.js";
+import atualizarEstatisticas from "./functions/atualizarEstatisticas.js";
 
 // Variavel para guardar os dados
 const data = carregarDados();
@@ -16,9 +16,6 @@ window.addEventListener('load', function () {
     // Seleciona o container dos detalhes
     const containerDetalhes = document.querySelector('.container-detalhes');
 
-    // Seleciona a barra
-    const barraProgresso = document.querySelector('.barra');
-
     // Altera as informações dinamicamente
     let titulo = containerDetalhes.querySelector('.titulo');
     titulo.textContent = objetivo.titulo;
@@ -26,38 +23,18 @@ window.addEventListener('load', function () {
     let desc = containerDetalhes.querySelector('.desc');
     desc.textContent = objetivo.descricao;
 
-    // Função que calcula e retorna informações sobre a conclusão do objetivo
-    let conclusao = calcularConclusao(objetivo)
     // Verifica se há subobjetivos
     // Só executa o script caso existam subobjetivos cadastrados
     if (objetivo.subobjetivos) {
         // Cria um card para cada subobjetivo cadastrado
         objetivo.subobjetivos.forEach(subObj => {
-
+            // Adiciona o subobjetivo na tela
             adicionarSubObjetivo(objetivo, subObj)
-            // Função para calcular e retornar informações sobre a conclusão
-            let conclusao = calcularConclusao(objetivo)
-
-            // Seleciona o campo de status
-            let status = containerDetalhes.querySelector('.status');
-
-            // Altera o status do objetivo
-            if (conclusao.porcentagem == 100) {
-                status.textContent = 'Concluído'
-            } else {
-                status.textContent = 'Não Concluído'
-            }
-
-            // Altera os dados da seção de estatísticas
-            // Verifica se a quantidade de subobjetivos concluídos são diferentes de 0, se não forem o valor é 0
-            document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-            document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
-            document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 0 ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
+            // Atualiza a seção de estatísticas
+            atualizarEstatisticas(objetivo);
         })
 
     }
-    // Preenche dinamicamente a barra
-    barraProgresso.style.width = conclusao.porcentagem + '%';
 });
 
 // Funções pra abrir e fechar
@@ -96,7 +73,6 @@ btnEnviar.addEventListener('click', function (event) {
     // Variavel de controle
     var modoForm = document.querySelector('form').dataset.mode;
 
-    console.log(document.querySelector('input[id="titulo-subobj"]'))
     if (modoForm == 'adicionar') {
         // Seleciona os valores dos campos do form
         let tituloSub = document.querySelector('input[id="titulo-subobj"]');
@@ -107,9 +83,9 @@ btnEnviar.addEventListener('click', function (event) {
             alert("Por favor, preencha todos os campos corretamente.");
             return;
         }
-        // Cria um novo ID a partir do último índice de subobjetivos
+        // Cria um novo ID a partir do maior id registrado
         // Caso não exista nenhum será 0
-        let novoID = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : 0;
+        let novoID = objetivo.subobjetivos?.length && objetivo.subobjetivos.length > 0 ? Math.max(...objetivo.subobjetivos.map(s => s.id)) + 1 : 0;
 
         // Cria um novo objeto
         let novoSubObj = {
@@ -123,23 +99,16 @@ btnEnviar.addEventListener('click', function (event) {
         objetivo.subobjetivos.push(novoSubObj)
         // Atualiza o localstorage
         localStorage.setItem('dados', JSON.stringify(data));
-
-        // Calcula novamente as estatísticas
-        const concluidos = objetivo.subobjetivos.filter(sub => sub.status === 'concluido').length
-
-        // Altera os dados da seção de estatísticas
-        document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-        document.querySelector('.card-conclusao p').textContent = concluidos
-        document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length - concluidos : '0';
         // Limpa os campos
         tituloSub.value = '';
         descricaoSub.value = '';
 
         // Adiciona o card na tela
         adicionarSubObjetivo(objetivo, novoSubObj);
+        // Atualiza a seção de estatísticas
+        atualizarEstatisticas(objetivo)
     } else if (modoForm == 'editar') {
         let cardIndex = document.querySelector('form').dataset.index;
-        console.log(cardIndex)
         // Seleciona o card com aquele índice
         let cardEditado = document.querySelector(`.card-subobj[data-index="${cardIndex}"]`);
         // Obtém os novos valores
@@ -153,7 +122,7 @@ btnEnviar.addEventListener('click', function (event) {
         // Obtém o array atual
         let arrayAtual = JSON.parse(localStorage.getItem('dados')) || [];
         // Obtém o objeto em questão
-        let subObjetivoAtual = arrayAtual.objetivos[idObjetivo].subobjetivos[cardIndex];
+        let subObjetivoAtual = arrayAtual.objetivos[idObjetivo].subobjetivos.find(s => s.id == cardIndex);
         // Atualiza os valores
         subObjetivoAtual.titulo = novoTitulo
         subObjetivoAtual.descricao = novaDescricao

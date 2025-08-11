@@ -1,5 +1,5 @@
 import carregarDados from "../exemplos.js";
-import calcularConclusao from "./calcConclusao.js";
+import atualizarEstatisticas from "./atualizarEstatisticas.js";
 
 function adicionarSubObjetivo(objetivo, subobj) {
     // Seleciona o container dos subobjetivos
@@ -35,12 +35,6 @@ function adicionarSubObjetivo(objetivo, subobj) {
             </div>
          </div>`
 
-
-    // Variavel para guardar os dados
-    const data = carregarDados();
-    // Seleciona a barra
-    const barraProgresso = document.querySelector('.barra');
-
     let cardsSubObj = document.querySelectorAll('.card-subobj');
     cardsSubObj.forEach(card => {
 
@@ -62,42 +56,36 @@ function adicionarSubObjetivo(objetivo, subobj) {
         }
         // Adiciona um eventlistener de click
         checkbox.addEventListener('click', function () {
+            // Variavel para guardar os dados
+            const data = carregarDados();
             // Seleciona o campo novamente
             let campoStatus = card.querySelector('.card-status');
             // Faz a troca do status e atualiza o status do subobjetivo
+            let subobj = '';
+
             switch (checkbox.checked) {
                 case true:
                     campoStatus.textContent = 'Concluído';
-                    data.objetivos[objetivo.id].subobjetivos[cardIndex].status = 'concluido';
+                    subobj = data.objetivos[objetivo.id].subobjetivos.find(s => s.id == cardIndex);
+                    if (subobj) {
+                        subobj.status = checkbox.checked ? 'concluido' : 'nao-concluido';
+                    }
                     break;
                 case false:
                     campoStatus.textContent = 'Não Concluído';
-                    data.objetivos[objetivo.id].subobjetivos[cardIndex].status = 'nao-concluido';
+                    subobj = data.objetivos[objetivo.id].subobjetivos.find(s => s.id == cardIndex);
+                    if (subobj) {
+                        subobj.status = checkbox.checked ? 'concluido' : 'nao-concluido';
+                    }
                     break;
                 default:
                     console.log("Erro");
                     break;
             }
+            // Atualiza a seção de estatísticas
+            atualizarEstatisticas(data.objetivos[objetivo.id]);
             // Atualiza o storage
             localStorage.setItem('dados', JSON.stringify(data))
-            // Calcula novamente o status da conclusão
-            let conclusao = calcularConclusao(data.objetivos[objetivo.id]);
-            // Seleciona o campo de status
-            let status = document.querySelector('.status');
-            // Altera o status do objetivo
-            if (conclusao.porcentagem == 100) {
-                status.textContent = 'Concluído'
-            } else {
-                status.textContent = 'Não Concluído'
-            }
-
-            // Preenche dinamicamente a barra
-            barraProgresso.style.width = conclusao.porcentagem + '%';
-
-            // Verifica se a quantidade de subobjetivos concluídos são diferentes de 0, se não forem o valor é 0
-            document.querySelector('.card-totais p').textContent = objetivo.subobjetivos?.length ? objetivo.subobjetivos.length : '0';
-            document.querySelector('.card-conclusao p').textContent = conclusao.qtdConcluidos !== 0 ? conclusao.qtdConcluidos : '0';
-            document.querySelector('.card-restantes p').textContent = objetivo.subobjetivos?.length && conclusao.qtdConcluidos !== 'undefined' ? objetivo.subobjetivos.length - conclusao.qtdConcluidos : '0';
         })
 
         let btnEditar = card.querySelector('.fa-pen-to-square');
@@ -118,8 +106,6 @@ function adicionarSubObjetivo(objetivo, subobj) {
             modal.style.display = 'flex';
         })
         btnDeletar.addEventListener('click', function () {
-            // Obtém o id do objetivo
-            let idSubObjetivo = card.dataset.index
             // Seleciona o modal de confirmação
             let modalExclusao = document.querySelector('#modal-exclusao');
             // Deixa ele visível na tela
@@ -137,10 +123,12 @@ function adicionarSubObjetivo(objetivo, subobj) {
                 // Obtém o array atual e atualiza ele
                 let arrayAtual = JSON.parse(localStorage.getItem('dados'));
                 // Remove o subobjetivo do array
-                arrayAtual.objetivos[objetivo.id].subobjetivos = arrayAtual.objetivos[objetivo.id].subobjetivos.filter(subobj => subobj.id != idSubObjetivo);
+                arrayAtual.objetivos[objetivo.id].subobjetivos = arrayAtual.objetivos[objetivo.id].subobjetivos.filter(subobj => subobj.id != cardIndex);
+
                 // Atualiza o localStorage
                 localStorage.setItem('dados', JSON.stringify(arrayAtual));
-
+                // Atualiza a seção de estatísticas
+                atualizarEstatisticas(arrayAtual.objetivos[objetivo.id]);
             })
         })
     })

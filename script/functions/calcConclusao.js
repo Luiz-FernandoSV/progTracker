@@ -4,15 +4,19 @@ function calcularConclusao(objetivo) {
     // Contador de subobjetivos concluídos
     let contadorConcluido = 0;
 
-    // Conta o número de subobjetivos concluídos
-    objetivo.subobjetivos.forEach(subObj => {
-        if (subObj.status == 'concluido') {
-            contadorConcluido++
-        }
-    });
+    // Verifica se existem subobjetivos
+    if (objetivo.subobjetivos.length > 0) {
+        // Conta o número de subobjetivos concluídos
+        objetivo.subobjetivos.forEach(subObj => {
+            if (subObj.status == 'concluido') {
+                contadorConcluido++
+            }
+        });
 
-    // Obtém a porcentagem de conclusão
-    porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
+        // Obtém a porcentagem de conclusão
+        porcentagem = (contadorConcluido / objetivo.subobjetivos.length) * 100
+    }
+
     // Cria um objeto com informações sobre a conclusão
     let infoConclusao = {
         qtdConcluidos: contadorConcluido,
