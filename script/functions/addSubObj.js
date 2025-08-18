@@ -29,8 +29,8 @@ function adicionarSubObjetivo(objetivo, subobj) {
                     <p class="card-status">${statusSub}</p>
                 </div>
                 <div class="div-acoes">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <i class="fa-solid fa-trash"></i>
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <i class="fa-regular fa-trash-can"></i>
                 </div>
             </div>
          </div>`
@@ -89,7 +89,7 @@ function adicionarSubObjetivo(objetivo, subobj) {
         })
 
         let btnEditar = card.querySelector('.fa-pen-to-square');
-        let btnDeletar = card.querySelector('.fa-trash');
+        let btnDeletar = card.querySelector('.fa-trash-can');
         btnEditar.addEventListener('click', function () {
             let modal = document.querySelector('.container-modal');
             let form = document.querySelector('form');

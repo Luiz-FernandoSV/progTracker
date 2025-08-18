@@ -20,16 +20,19 @@ window.addEventListener('load', function () {
         }
         else {
             // Função que calcula e retorna informações sobre a conclusão do objetivo
-            let conclusao = calcularConclusao(objetivo)
-            // Salva ela no array
-            arrayConclusao.push(conclusao.porcentagem)
+            let conclusao = calcularConclusao(objetivo);
+            let porcentagem = conclusao.porcentagem
+            // Salva ela no array e associa ao id do objetivo
+            arrayConclusao.push({id: objetivo.id , porcentagem });
         }
     });
 
     // Para cada objetivo cadastrado, cria um card no container
     data.objetivos.forEach(objetivo => {
+        // Procura pela porcentagem de conclusão do objetivo
+        let conclusaoObj = arrayConclusao.find(conclusao => conclusao.id == objetivo.id);
         // Função externa para criar os cards
-        adicionarObjeto(objetivo, arrayConclusao[objetivo.id]);
+        adicionarObjeto(objetivo, conclusaoObj.porcentagem);
     });
 })
 

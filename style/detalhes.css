@@ -113,12 +113,22 @@ body{
     align-items: center;
     font-size: 20px;
 }
-.div-acoes .fa-trash{
+.div-acoes .fa-trash-can{
+    padding: 6px;
     color: red;
     cursor: pointer;
 }
+.div-acoes .fa-trash-can:hover{
+    background-color: #f1f1f1;
+    border-radius: 8px;
+}
 .div-acoes .fa-pen-to-square{
+    padding: 6px;
     cursor: pointer;
+}
+.div-acoes .fa-pen-to-square:hover{
+    background-color: #f1f1f1;
+    border-radius: 8px;
 }
 
 /*Estilos do form modal*/

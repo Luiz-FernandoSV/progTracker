@@ -7,8 +7,8 @@ function adicionarObjeto(objetivo, conclusao) {
                 <div class="top-bar">
                     <h4 class="titulo-objetivo">${objetivo.titulo}</h4>
                     <div class="div-acoes">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        <i class="fa-solid fa-trash"></i>
+                        <i class="fa-regular fa-pen-to-square"></i>
+                        <i class="fa-regular fa-trash-can"></i>
                     </div>
                 </div>
                 <p class="descricao-objetivo">${objetivo.descricao}</p>
@@ -56,7 +56,7 @@ function adicionarObjeto(objetivo, conclusao) {
             modal.style.display = 'flex';
         })
         // Seleciona o botão de apagar
-        let iconeDeletar = card.querySelector('.fa-trash');
+        let iconeDeletar = card.querySelector('.fa-trash-can');
         iconeDeletar.addEventListener('click', function (event) {
             event.stopPropagation(); // Evita o redirecionamento
             // Obtém o id do objetivo

@@ -11,7 +11,7 @@ function carregarDados() {
             "id": 0,
             "titulo": "Revisar fundamentos",
             "descricao": "Revisar tipos de dados, funções, escopos e manipulação de arrays.",
-            "status": "concluido"
+            "status": "nao-concluido"
           },
           {
             "id": 1,
@@ -51,7 +51,7 @@ function carregarDados() {
             "id": 0,
             "titulo": "Ler 1 livro por mês",
             "descricao": "Definir uma meta de leitura mensal para cumprir o objetivo anual.",
-            "status": "concluido"
+            "status": "nao-concluido"
           },
           {
             "id": 1,
@@ -65,19 +65,19 @@ function carregarDados() {
         "id": 3,
         "titulo": "Aprender Banco de Dados",
         "descricao": "Estudar conceitos de banco de dados relacionais e NoSQL, focando em SQL e MongoDB.",
-        "status": "concluido",
+        "status": "nao-concluido",
         "subobjetivos": [
           {
             "id": 0,
             "titulo": "Praticar consultas SQL",
             "descricao": "Aprender SELECT, JOIN, GROUP BY e subqueries.",
-            "status": "concluido"
+            "status": "nao-concluido"
           },
           {
             "id": 1,
             "titulo": "Modelagem de dados",
             "descricao": "Entender como criar diagramas ER e normalizar tabelas.",
-            "status": "concluido"
+            "status": "nao-concluido"
           }
         ]
       }
